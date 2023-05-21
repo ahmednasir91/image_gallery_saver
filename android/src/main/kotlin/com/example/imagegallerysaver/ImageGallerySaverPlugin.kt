@@ -114,7 +114,7 @@ class ImageGallerySaverPlugin : FlutterPlugin, MethodCallHandler {
             bmp.recycle()
             MediaScannerConnection.scanFile(
                 context!!,
-                arrayOf(fileUri),
+                arrayOf(fileUri.toString()),
                 null
             ) { path, uri ->
                 Log.d("saveImageToGallery", "Scanned $path, uri: $uri")

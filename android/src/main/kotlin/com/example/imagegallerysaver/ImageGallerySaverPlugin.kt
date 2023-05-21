@@ -49,23 +49,32 @@ class ImageGallerySaverPlugin : FlutterPlugin, MethodCallHandler {
 
     private fun generateUri(extension: String = "", name: String? = null): Uri {
         var fileName = name ?: System.currentTimeMillis().toString()
-        
+        Log.d("generateUri", "File Name: $fileName")
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             var uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
 
             val values = ContentValues()
             values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+            Log.d("generateUri", "Display Name: $fileName")
+
             values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
             val mimeType = getMIMEType(extension)
+            Log.d("generateUri", "MIME Type: $mimeType")
+
             if (!TextUtils.isEmpty(mimeType)) {
                 values.put(MediaStore.Images.Media.MIME_TYPE, mimeType)
-                values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+                values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis())
+                Log.d("generateUri", "Date Taken: ${System.currentTimeMillis()}")
+
                 if (mimeType!!.startsWith("video")) {
                     uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
                     values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_MOVIES)
                 }
             }
-            return applicationContext?.contentResolver?.insert(uri, values)!!
+            val contentUri = applicationContext?.contentResolver?.insert(uri, values)
+            Log.d("generateUri", "Generated URI: $contentUri")
+            return contentUri!!
         } else {
             val storePath = Environment.getExternalStorageDirectory().absolutePath + File.separator + Environment.DIRECTORY_PICTURES
             val appDir = File(storePath)
@@ -75,9 +84,12 @@ class ImageGallerySaverPlugin : FlutterPlugin, MethodCallHandler {
             if (extension.isNotEmpty()) {
                 fileName += (".$extension")
             }
-            return Uri.fromFile(File(appDir, fileName))
+            val fileUri = Uri.fromFile(File(appDir, fileName))
+            Log.d("generateUri", "Generated URI: $fileUri")
+            return fileUri
         }
     }
+
 
     private fun getMIMEType(extension: String): String? {
         var type: String? = null;

@@ -22,6 +22,7 @@ import java.io.IOException
 import android.text.TextUtils
 import android.webkit.MimeTypeMap
 import android.util.Log
+import android.media.MediaScannerConnection
 
 
 class ImageGallerySaverPlugin : FlutterPlugin, MethodCallHandler {
@@ -111,6 +112,13 @@ class ImageGallerySaverPlugin : FlutterPlugin, MethodCallHandler {
             fos.close()
             context!!.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, fileUri))
             bmp.recycle()
+            MediaScannerConnection.scanFile(
+                context!!,
+                arrayOf(fileUri),
+                null
+            ) { path, uri ->
+                Log.d("saveImageToGallery", "Scanned $path, uri: $uri")
+            }
             SaveResultModel(fileUri.toString().isNotEmpty(), fileUri.toString(), null).toHashMap()
         } catch (e: IOException) {
             SaveResultModel(false, null, e.toString()).toHashMap()

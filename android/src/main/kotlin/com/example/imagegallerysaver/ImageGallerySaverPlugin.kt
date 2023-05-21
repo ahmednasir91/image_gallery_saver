@@ -21,6 +21,7 @@ import java.io.FileInputStream
 import java.io.IOException
 import android.text.TextUtils
 import android.webkit.MimeTypeMap
+import android.util.Log
 
 
 class ImageGallerySaverPlugin : FlutterPlugin, MethodCallHandler {

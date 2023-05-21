@@ -59,6 +59,7 @@ class ImageGallerySaverPlugin : FlutterPlugin, MethodCallHandler {
             val mimeType = getMIMEType(extension)
             if (!TextUtils.isEmpty(mimeType)) {
                 values.put(MediaStore.Images.Media.MIME_TYPE, mimeType)
+                values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
                 if (mimeType!!.startsWith("video")) {
                     uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
                     values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_MOVIES)
